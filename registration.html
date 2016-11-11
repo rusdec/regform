@@ -1,0 +1,65 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>
+		Регистрация
+	</title>
+	<!-- js/css plug-->
+	<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/font.css">
+	<script src="/static/js/jquery-3.1.1.min.js"></script>
+</head>
+
+<body>
+	<script src="/static/js/jq.js"></script>
+	<div class="div_registration">
+		<div class="div_registration_header">
+			<span class="span_registration_header" style="font-family: SanFrancisco;">Новый пользователь</span>
+		</div>
+		<form>
+			<div class="div_registration_group">
+				<input class="input_registration" type="text" name="user_email" placeholder="эл.почта">
+			</div>
+			<div class="div_registration_group">
+				<input class="input_registration" type="text" name="user_password"			placeholder="пароль">
+				<input class="input_registration" type="text" name="user_password_confirm"	placeholder="ещё раз пароль">
+			</div>
+			<div class="div_registration_group">
+				<input class="input_registration" type="text" name="user_login"			placeholder="логин">
+				<input class="input_registration" type="text" name="user_first_name"	placeholder="имя">
+				<input class="input_registration" type="text" name="user_last_name"		placeholder="фамилия">
+			</div>
+			<div class="div_registration_group">
+				<select class="select_registration">
+					<option selected="selected" disabled>
+						Контрольный вопрос
+					</option>
+					<option>
+						Дата твоего двадцатого дня рождения.
+					</option>
+					<option>
+						Девичья фамилия твоего котика.
+					</option>
+					<option>
+						Твоя самая любимая встроенная функция в php7
+					</option>
+					<option>
+						Первый фильм, который ты скачал с рутрекера.
+					</option>
+					<option>
+						Имя, которое ты дал своему гироскутеру.
+					</option>
+				</select>
+				<input class="input_registration" type="text" name="user_question" placeholder="ответ">
+			</div>
+			<div class="div_registration_group" style="text-align: left;">
+				<input type="checkbox" name="user_last_name"  placeholder="фамилия">
+				<span class="span_cond_registration">Соглашаюсь с условими</span>
+			</div>
+			<input id="input_registration" class="input_submit_registration" type="submit" value="Зарегистрироваться!" method="POST" action="/registration">
+		</form>
+	</div>
+</body>
+
+</html>
