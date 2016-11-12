@@ -17,7 +17,7 @@ body {
 	padding: 5px;
 }
 
-.select_registration, .span_cond_registration, .a_registration {
+.select_registration, .span_cond_registration, .a_registration_navi {
 	font-size: 10pt;
 }
 
@@ -25,11 +25,11 @@ body {
 	color: grey;
 }
 
-.input_registration, .select_registration, .span_registration_header, .a_registration {
+.input_registration, .select_registration, .span_registration_header, .a_registration_navi {
 	font-family: SanFrancisco;
 }
 
-.a_registration {
+.a_registration_navi {
 	text-decoration: none;
 	color: #6699FF;
 }
@@ -42,14 +42,11 @@ body {
 	color: #6699FF;
 	padding: 5px;
 	font-size: 14pt;
-	border-top: none;
-	border-right: none;
-	border-left: none;
-	border-bottom: 4px solid #f0f0f0;
+	border: 0px;
 	background-color: #f0f0f0;
 }
 
-.input_submit_registration:hover, .a_registration:hover {
+.input_submit_registration:hover, .a_registration_navi:hover {
 	color: #99BBFF;
 	cursor: pointer;
 }
