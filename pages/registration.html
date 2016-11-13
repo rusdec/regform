@@ -13,11 +13,12 @@
 
 <body>
 	<script src="/static/js/jq.js"></script>
+	<script src="/static/js/actions.js"></script>
 	<div class="div_registration">
 		<div class="div_registration_header">
 			<span class="span_registration_header" style="font-family: SanFrancisco;">Новый пользователь</span>
 		</div>
-		<form>
+		<form id="form_registration">
 			<div class="div_registration_group">
 				<input class="input_registration" type="text" name="user_email" placeholder="эл.почта">
 			</div>
@@ -51,15 +52,15 @@
 						Имя, которое ты дал своему гироскутеру.
 					</option>
 				</select>
-				<input class="input_registration" type="text" name="user_question" placeholder="ответ">
+				<input class="input_registration" type="text" name="user_answer" placeholder="ответ">
 			</div>
 			<div class="div_registration_group" style="text-align: left;">
 				<input type="checkbox" name="user_last_name"  placeholder="фамилия">
 				<span class="span_cond_registration">Соглашаюсь с условими</span>
 			</div>
-			<input id="input_registration" class="input_submit_registration" type="submit" value="Зарегистрироваться!" method="POST" action="/registration">
-			<a class="a_registration_navi" href="/">Войти</a>
 		</form>
+		<button id="input_registration" class="input_submit_registration">Зарегистрироваться!</button>
+		<a class="a_registration_navi" href="/authorisation">Войти</a>
 	</div>
 </body>
 
