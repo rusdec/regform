@@ -1,6 +1,6 @@
 <?php
 
-require ('system/http_handler.php');
+require ('system/http_handlers.php');
 	
 switch ($_SERVER['REQUEST_METHOD']) {
 	case 'GET':
@@ -15,12 +15,26 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
 function handler($req_uri, $data) {
     switch ($req_uri) {
+		case '/':
+			my_page();
+		break;
+
         case '/registration':
             registration();
         break;
-        case '/authorisation':
-            authorisation();
+
+        case '/signin':
+            signin();
         break;
+
+		case '/authorisation':
+			authorisation($data);
+		break;
+
+		case '/user/create':
+			create_user($data);
+		break;
+
         default:
             not_found();
     }
