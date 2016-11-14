@@ -1,39 +1,41 @@
 <script src="/static/js/jquery-3.1.1.min.js"></script>
+<script src="/static/js/accept_terms.js"></script>
 <script src="/static/js/jq.js"></script>
-<script src="/static/js/actions.js"></script>
 <div class="div_registration">
 	<div class="div_registration_header">
 		<span class="span_registration_header" style="font-family: SanFrancisco;">Новый пользователь</span>
 	</div>
 	<form id="form_registration">
 		<div class="div_registration_group">
-			<input group="include" class="input_registration" type="text" name="email"			placeholder="эл.почта">
+			<input group="include" class="input_registration" type="text" name="email"			placeholder="эл.почта*">
 		</div>
 		<div class="div_registration_group">
-			<input group="include" class="input_registration" type="text" name="password"		placeholder="пароль">
-			<input class="input_registration" type="text" name="password_confirm"				placeholder="ещё раз пароль">
+			<input group="include" class="input_registration" type="text" name="password"		placeholder="пароль*">
+			<input class="input_registration" type="text" name="password_confirm"				placeholder="ещё раз пароль*">
 		</div>
 		<div class="div_registration_group">
-			<input group="include" class="input_registration" type="text" name="login"			placeholder="логин">
-			<input group="include" class="input_registration" type="text" name="first_name"		placeholder="имя">
-			<input group="include" class="input_registration" type="text" name="last_name"		placeholder="фамилия">
+			<input group="include" class="input_registration" type="text" name="login"			placeholder="логин*">
+			<input group="include" class="input_registration" type="text" name="first_name"		placeholder="имя*">
+			<input group="include" class="input_registration" type="text" name="last_name"		placeholder="фамилия*">
 		</div>
 		<div class="div_registration_group">
-			<select class="select_registration">
+			<select group="include" class="select_registration" name="registration_question_id">
 				<option selected="selected" disabled>Контрольный вопрос</option>
-				<option>Дата твоего двадцатого дня рождения.</option>
-				<option>Девичья фамилия твоего котика.</option>
-				<option>Твоя самая любимая встроенная функция в php7.</option>
-				<option>Первый фильм, который ты скачал с рутрекера.</option>
-				<option>Имя, которое ты дал своему гироскутеру.</option>
+				<option value="1">Дата твоего двадцатого дня рождения.</option>
+				<option value="2">Девичья фамилия твоей кошки.</option>
+				<option value="3">Встроенная в PHP7 функция, от которой ты без ума.</option>
+				<option value="4">Твой первый скачанный с рутрекера фильм.</option>
+				<option value="5">Имя, которое ты дал своему гироскутеру.</option>
 			</select>
-			<input class="input_registration" type="text" name="answer" placeholder="ответ">
+			<input group="include" class="input_registration" type="text" name="answer" placeholder="ответ*">
 		</div>
 		<div class="div_registration_group" style="text-align: left;">
 			<input type="checkbox" name="accept_terms">
 			<span class="span_cond_registration">Соглашаюсь с условими</span>
 		</div>
 	</form>
+	<div class="div_registration_group" id="div_registration_info">
+	</div>
 	<button id="input_registration" class="input_submit_registration">Зарегистрироваться!</button>
-	<a class="a_registration_navi" href="/authorisation">Войти</a>
+	<a class="a_registration_navi" href="/signin">Войти</a>
 </div>

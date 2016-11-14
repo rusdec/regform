@@ -1,6 +1,6 @@
 <?php
 
-require('users.php');
+require('models.php');
 require('helpers.php');
 
 function signin() {
@@ -27,14 +27,16 @@ function my_page() {
 }
 function authorisation($data) {
 	$user = new User;
-	$user->Init($data);
 }
 
 function create_user($data) {
 	//Написать метод проверки значений массива data в классе!!
 	// user->Check($data) : true|false
 	$user = new User;
-	$user->Init($data);
-	$user->Create();
+	$user->SetUserForm($data);
+	$result = $user->Create();
+	header('Content-Type: application/json;charset=utf-8');
+	echo json_encode($result);
+	
 }
 ?>

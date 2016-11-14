@@ -2,7 +2,7 @@ body {
 	background-color: #FFF;
 }
 
-.input_registration, .select_registration, .input_submit_registration {
+.input_registration, .select_registration, .input_submit_registration, .input_submit_registration_enabled {
 	width: 390px;
 	margin: 5px;
 	font-size: 10pt;
@@ -13,19 +13,25 @@ body {
 	margin-bottom: 15px;
 }
 
-.input_registration {
-	padding: 5px;
+.input_registration, .select_registration {
+	padding: 6px;
+	border: 1px solid #d0d0d0;
+	border-radius: 4px;	
 }
 
-.select_registration, .span_cond_registration, .a_registration_navi {
+.select_registration, .a_registration_navi, .span_registration_info {
 	font-size: 10pt;
+}
+
+.span_cond_registration {
+	font-size: 8pt;
 }
 
 .span_cond_registration {
 	color: grey;
 }
 
-.input_registration, .select_registration, .span_registration_header, .a_registration_navi {
+.input_registration, .select_registration, .span_registration_header, .a_registration_navi, .span_registration_info, .span_cond_registration {
 	font-family: SanFrancisco;
 }
 
@@ -38,16 +44,23 @@ body {
 	color: #000;
 }
 
-.input_submit_registration {
-	color: #6699FF;
+.input_submit_registration, .input_submit_registration_enabled {
 	padding: 5px;
 	font-size: 14pt;
 	border: 0px;
 	background-color: #f0f0f0;
 }
 
-.input_submit_registration:hover, .a_registration_navi:hover {
-	color: #99BBFF;
+.input_submit_registration {
+	color: #909090;
+}
+
+.input_submit_registration_enabled {
+	color: #6699ff;
+}
+
+.input_submit_registration_enabled:hover, .a_registration_navi:hover {
+	color: #99bbff;
 	cursor: pointer;
 }
 
