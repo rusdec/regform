@@ -1,0 +1,56 @@
+/*
+* Пример взят http://www.w3schools.com/howto/howto_css_tooltip.asp
+* Как это работает... а не всё ли равно для текущей задачи?
+* Имеются расхождения с оригиналом для подгонки под соответсвие виду регформы.
+*/
+
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    background-color: #f0f0f0;
+    color: #000;
+    text-align: left;
+    padding: 5px;
+    border-radius: 6px;
+	border-color: #909090;
+	border: 1px solid #d0d0d0;
+
+	/* Font */
+	font-family: SanFrancisco;
+	font-size: 8pt;	
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
