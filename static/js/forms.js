@@ -23,7 +23,7 @@ function check_reg_form(isOk) {
 				"^[a-zA-Zа-яА-Я]{2,30}$",
 			],
 		"answer" : [
-				"^[a-zA-Zа-яА-Я0-9]{2,50}$"
+				"^[a-zA-Zа-яА-Я0-9 ]{2,50}$"
 			],
 		"password_confirm" :  [
 				".{8,15}"
@@ -71,8 +71,10 @@ var sendButton = $("#input_post");
 sendButton.click(function() {
 	isOK = true;
 	var response_msg;
-
-	check_reg_form(isOK);
+	
+	if (sendButton.val() != '/authorisation') { //TODO: исправить этот грязный хак
+		check_reg_form(isOK);
+	}
 	if (isOK) {
 		var Data = $("#form_post :input[group=include]").serializeArray();
 		//SHA1-хеширование значения поля password
