@@ -15,7 +15,7 @@ function check_reg_form(isOk) {
 				'[a-z]',
 				'[A-Z]',
 				'[0-9]',
-				'[-_]',
+				'[_]',
 				'.{8,15}'
 			],
 		},
@@ -43,7 +43,7 @@ function check_reg_form(isOk) {
 		answer:		{
 			name:	"answer",
 			pttrn:	[
-				"^[a-zA-Zа-яА-Я0-9]{1,50}$"
+				"^[a-zA-Zа-яА-Я0-9]{2,50}$"
 			],
 		},
 		password_c:	{

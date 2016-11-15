@@ -1,22 +1,67 @@
 <script src="/static/js/jquery-3.1.1.min.js"></script>
 <script src="/static/js/accept_terms.js"></script>
 <script src="/static/js/jq.js"></script>
+<link	rel="stylesheet" href="/static/css/tooltip.css">
 <div class="div_registration">
 	<div class="div_registration_header">
 		<span class="span_registration_header" style="font-family: SanFrancisco;">Новый пользователь</span>
 	</div>
 	<form id="form_registration">
 		<div class="div_registration_group">
-			<input group="include" class="input_registration" type="text" name="email"			placeholder="эл.почта*">
+			<div class="tooltip">
+				<span class="tooltiptext span_tooltip_text">
+						<b>Пример:</b><br>spb@yandex.ru
+				</span>
+				<input group="include" class="input_registration" type="text" name="email"			placeholder="эл.почта*">
+			</div>
 		</div>
 		<div class="div_registration_group">
+			<div class="tooltip">
+				<span class="tooltiptext span_tooltip_text">
+						<b>Требования:</b><br>
+						- длинна от 8 до 15 знаков<br>
+						- только латиница, цифры и знак _<br>
+						- минимум 1 строчная буква<br>
+						- минимум 1 заглавная буква<br>
+						- минимум 1 цифра<br>
+						- минимум 1 знак _
+						
+				</span>
 			<input group="include" class="input_registration" type="text" name="password"		placeholder="пароль*">
-			<input class="input_registration" type="text" name="password_confirm"				placeholder="ещё раз пароль*">
+			</div>
+			<div class="tooltip">
+				<span class="tooltiptext span_tooltip_text">
+						<b>Требования:</b><br>
+						- пароль должен соответсвовать<br>введённому выше
+				</span>
+				<input class="input_registration" type="text" name="password_confirm"				placeholder="ещё раз пароль*">
+			</div>
 		</div>
 		<div class="div_registration_group">
-			<input group="include" class="input_registration" type="text" name="login"			placeholder="логин*">
-			<input group="include" class="input_registration" type="text" name="first_name"		placeholder="имя*">
-			<input group="include" class="input_registration" type="text" name="last_name"		placeholder="фамилия*">
+			<div class="tooltip">
+				<span class="tooltiptext span_tooltip_text">
+						<b>Требования:</b><br>
+						- длина от 7 до 14 знаков<br>
+						- только латиница и цифры
+				</span>
+				<input group="include" class="input_registration" type="text" name="login"			placeholder="логин*">
+			</div>
+			<div class="tooltip">
+				<span class="tooltiptext span_tooltip_text">
+						<b>Требования:</b><br>
+						- длина от 2 до 30 знаков<br>
+						- только латиница и кириллица
+				</span>
+				<input group="include" class="input_registration" type="text" name="first_name"		placeholder="имя*">
+			</div>
+			<div class="tooltip">
+				<span class="tooltiptext span_tooltip_text">
+						<b>Требования:</b><br>
+						- длина от 2 до 30 знаков<br>
+						- только латиница и кириллица
+				</span>
+				<input group="include" class="input_registration" type="text" name="last_name"		placeholder="фамилия*">
+			</div>
 		</div>
 		<div class="div_registration_group">
 			<select group="include" class="select_registration" name="registration_question_id">
@@ -27,6 +72,12 @@
 				<option value="4">Твой первый скачанный с рутрекера фильм.</option>
 				<option value="5">Имя, которое ты дал своему гироскутеру.</option>
 			</select>
+			<div class="tooltip">
+				<span class="tooltiptext span_tooltip_text">
+						<b>Требования:</b><br>
+						- длина от 2 до 50 знаков<br>
+						- только латиница, кириллица, цифры
+				</span>
 			<input group="include" class="input_registration" type="text" name="answer" placeholder="ответ*">
 		</div>
 		<div class="div_registration_group" style="text-align: left;">
