@@ -1,7 +1,5 @@
 <?php
 
-//posix_kill(getmypid(), 19);
-
 /*
 * Таблица users
 *
@@ -21,9 +19,20 @@ class User {
 	* - Добавить <input> в registration.html
 	*	- name  = название столбца, 
 	*	- group = "include".
-	* - Добавить элемент в массив ниже
+	* - Добавить элемент в файл system/models.php в класс User, лок.перем. user и user_form в массив ниже
 	*	- индекс элемента = название столбца.
+	* Если элемент проверяемый:
+	* - Добавить элемент в массив elements_for_check в файл statis/js/forms.js
+	*   - индекс элемента = название столбца
+	*   - значение элемента = массив регулярных выражений 
+	* - Добавить элемент в массив elements_for_check в файл system/models.php в класс User, метод CheckData 
+	*   - индекс элемента = название столбца
+	*   - значение элемента = массив регулярных выражений
+	*
+	*TODO: что насчёт отдельного файла с соответсвием [поле]<->[регулярка], json или что ещё? Подумать.
 	*/
+
+	//массив соответсвует таблице users
 	private	$user = array(
 		'id'				=> "",
 		'email'				=> "",
@@ -33,6 +42,7 @@ class User {
 		'first_name'		=> ""
 	);
 	
+	//массив соответсвует данным формы
 	private $user_form = array(
 		'id'						=> "",
 		'email'						=> "",
@@ -185,6 +195,7 @@ class User {
 			'registration_question_id'	=> $this->user_form['registration_question_id'],
 			'answer'					=> $this->user_form['answer']
 		));
+		// Добавление записи с id пользователя и id выбранного вопроса
 		$result = $user_answer->Create();
 		
 		if(!$result['result']) {
@@ -237,7 +248,7 @@ class User {
 			array(
 				'name' => 'answer',
 				'pttrns' => array(
-					'/^[a-zA-Zа-яА-Я0-9]{2,50}$/u',
+					'/^[a-zA-Zа-яА-Я0-9 ]{2,50}$/u',
 				)
 			),
 			array(
@@ -324,7 +335,7 @@ class UserAnswer {
      
         return array(
 				'result'	=> true,
-				'msg'		=> "успех");
+				'msg'		=> "");
 	}
 	
 	private function TableName() {
@@ -383,4 +394,128 @@ class Question {
 		return $result;
 	}
 	
+}
+
+/*
+* Таблица timeout_ip
+*
+* Доступные извне методы:
+* - FindOne()	: return array('result' => bool, 'msg' => string)
+* - Create() 	: return array('result' => bool, 'msg' => string)
+* - Set(string) : return array('result' => bool, 'msg' => string)
+*/
+class Timeout {
+
+	private $ip_addresses = array(
+			"ip" => "",
+	);
+	private $ip_address;
+	private $expire = 600;
+	private $db;
+	
+	function __construct() {
+		$CONFIG = include('db_config.php');
+		$dsn = "mysql:host=".$CONFIG['dbhost'].";dbname=".$CONFIG['dbname'].";charset=".$CONFIG['dbchar'];
+		try {
+			$this->db = new PDO($dsn, $CONFIG['dbuser'], $CONFIG['dbpass']);
+		} catch (PDOException $e) {
+			die("Cant connect to MySQL. Err: ". $e->getMessage());
+		}
+	}
+	
+	private function TableName() {
+		return "timeout_ip";
+	}
+
+	/*
+	* return array('result' => bool, 'msg' => string)
+	*/
+	function Set($ip) {
+		$isOK = $this->isIp($ip);
+        if (!$isOK['result']) {
+			return $isOK;
+		}
+		$this->ip_address = $ip;	
+
+        return array(
+            'result' => true,
+            'msg'   => ""
+        );
+	}
+	
+	/*
+	* return array('result' => bool, 'msg' => string)
+	*/
+	function Create() {
+		foreach($this->ip_addresses as $column => $nothing) {
+            $columns[]  = $column;
+            $values[]   = ':'.$column;
+        }
+        $columns    = implode(',', $columns);
+        $values     = implode(',', $values);
+		
+		$this->ip_addresses['ip'] = $this->ip_address;
+        $query = $this->db->prepare("INSERT INTO " . $this->TableName() ." (".$columns.") VALUES (".$values.")");
+        $isOk = $query->execute($this->ip_addresses);
+        if (!$isOk) {
+            return array(
+                'result'    => false,
+                'msg'       => "Неизвестная ошибка. Обратитесь к разработчику."
+            );
+        }
+
+        return array(
+                'result'    => true,
+                'msg'       => ''
+		);
+    }
+
+	/*
+	* return array('result' => bool, 'msg' => string)
+	*/
+	function FindOne() {
+		$query = $this->db->prepare("DELETE FROM " . $this->TableName() . " WHERE `time` < NOW() - INTERVAL :expire SECOND");
+		$query->execute(array('expire' => $this->expire));
+		
+		$query = $this->db->prepare("SELECT MINUTE(
+												TIMEDIFF(
+													NOW(),
+													(SELECT `time` FROM " . $this->TableName()  . " WHERE ip = :ip AND `time` >= NOW() - INTERVAL :expire SECOND)
+												)
+											) AS `time`
+		");
+        $query->execute(array('ip' => $this->ip_address, 'expire' => $this->expire));
+
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        if ($result['time'] != "") {
+			$expire = ($this->expire/60) - $result['time']; // сек./60 - для получения минут
+            return array(
+				'result' => false,
+				'msg'	=>	'Повторная регистрация с вашего IP-адреса возможна через '. $expire . ' минут.'
+			);
+        }
+
+		return array(
+			'result' => true,
+			'msg'	=> ""
+		);
+    }
+
+	/*
+	* return array('result' => bool, 'msg' => string)
+	*/
+    private function isIp($ip) {
+        $pattern = '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/';
+        $result = preg_match($pattern, $ip);
+        if (!$result) {
+            return array(
+                'result' => false,
+                'msg'   => "IP-адрес не является ip-адресом v.4."
+            );
+		}
+        return array(
+            'result' => true,
+            'msg'   => ""
+        );
+    }
 }

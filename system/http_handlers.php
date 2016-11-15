@@ -1,7 +1,6 @@
 <?php
 
 require('models.php');
-require('helpers.php');
 
 function signin() {
 	readfile('pages/header.html');
@@ -29,6 +28,7 @@ function not_found() {
 	readfile('pages/404.html');
 	readfile('pages/footer.html');
 }
+
 function user() {
 	session_start();
 	if (!isset($_SESSION['auth'])) {
@@ -56,7 +56,16 @@ function authorisation($data) {
 	return;
 }
 
-function create_user($data) {
+function create_user($data, $raddr) {
+	$timeout = new Timeout;
+	$timeout->Set($raddr);
+	$isOK = $timeout->FindOne();
+	if (!$isOK['result']) {
+		header('Content-Type: application/json;charset=utf-8');
+		echo json_encode($isOK);
+		return;
+	}
+
 	$user = new User;
 	$isOK = $user->CheckData($data);
 	if (!$isOK['result']) {
@@ -66,8 +75,11 @@ function create_user($data) {
 	}
 	$user->SetUserForm($data);
 	$result = $user->Create();
+	// Если пользователь создан, установить время ожидания
+	if ($result['result']) {
+		$timeout->Create();
+	}
 	header('Content-Type: application/json;charset=utf-8');
 	echo json_encode($result);
-	
 }
 ?>
