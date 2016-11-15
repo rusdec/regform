@@ -4,6 +4,12 @@
 
 /*
 * Таблица users
+*
+* Доступные извне методы:
+* - Create()			: return array('result' => bool, 'msg' => string)
+* - SetUserForm(array)	: return ничего
+* - Auth(array)			: return array('result' => bool, 'msg' => string)
+* - CheckData(array)	: return array('result' => bool, 'msg' => string)
 */
 class User {
 	
@@ -50,7 +56,7 @@ class User {
 		}
 	}
 
-	function TableName() {
+	private function TableName() {
 		return "users";
 	}
 
@@ -62,6 +68,7 @@ class User {
 			$this->user_form[$key] = $data[$key];
 		}
 	}
+
 	private function SetUser($data) {
 		foreach($this->user as $key => $nothing) {
 			if ($data[$key] == "") {
@@ -70,12 +77,36 @@ class User {
 			$this->user[$key] = $data[$key];
 		}
 	}
-	
+
+	/*
+	* return array('result' => bool, 'msg' => string)
+	*/
+	function Auth($data) {
+		$user = $this->FindOne(array(
+			'login' => $data['login']
+		));
+		if (count($user) == 0) {
+			return array(
+				'result'	=> false,
+				'msg'		=> 'Пользователя не существует.'
+			);
+		}
+		if ($user['password'] != $data['password']) {
+			return array(
+				'result'	=> false,
+				'msg'		=> 'Неверно введён пароль.'	
+			);
+		}
+		return array(
+			'result' 	=> true,
+			'msg'		=> ""
+		);
+	}
+		
 	/*
 	* return user[]
 	*/
-	function FindOne($data) {
-	
+	private function FindOne($data) {
 		$pairs = array();
 	
 		foreach($data as $column => $nothing) {
@@ -137,12 +168,11 @@ class User {
 
 		$query = $this->db->prepare("INSERT INTO " . $this->TableName()  . " (".$columns.") VALUES (".$pttrns.")");
 		$this->SetUser($this->user_form);
-		$this->user['password'] = sha1($this->user['password']);
 		$isOk = $query->execute($this->user);
 		if (!$isOk) {
            	return array(
 				'result'	=> false,
-				'msg'		=> "Неизвестная ошибка. Обратитесь к разработчику.."
+				'msg'		=> "Неизвестная ошибка. Обратитесь к разработчику."
 			);
 		}
 		$this->user = $this->FindOne(array(
@@ -158,7 +188,7 @@ class User {
 		$result = $user_answer->Create();
 		
 		if(!$result['result']) {
-			return $result; // Плохой array(result => bool, msg => string) из UserAnswer::Create
+			return $result; // array(result => bool, msg => string) из UserAnswer::Create
 		}
 
 		return array(
@@ -172,50 +202,65 @@ class User {
 	*/
 	function CheckData($data) {
 		$isOK = true;
+		$symb = '/#$%^&*()+=-[]\';,./{}|:<>?~/';
 		$elements_for_check = array(
-			'email' => array(
-					'/^[a-z0-9][a-z0-9_-]+@[a-z0-9]+\.[a-z]{2,7}$/'
+			array(
+				'name' => 'email',
+				'pttrns' => array(
+					'/^[a-z0-9-]{2,}@[a-z0-9]+\.[a-z]{2,7}$/'
+				)
 			),
-			'password'=> array(
-					'/[a-z]/',
-					'/[A-Z]/',
-					'/[0-9]/',
-					'/[_]/',
-					'/[^\W]/',
-					'/.{8,15}/'
+			array(
+				'name' => 'password',
+				'pttrns'=> array( //соответсвие sha1-хешу
+					'/^[a-z0-9]{40}$/',
+				)
 			),
-			'login'	=> array(
+			array(
+				'name' => 'login',
+				'pttrns' => array(
 					'/^[a-zA-Z0-9]{7,14}$/',
-					'/[^\s]/'
+				)
 			),
-			'first_name' => array(
-					'/^[a-zA-Zа-яА-Я]{2,30}$/',
-					'/[^\s]/'
+			array(
+				'name' => 'first_name',
+				'pttrns' => array(
+					'/^[a-zA-Zа-яА-Я]{2,30}$/u',
+				)
 			),
-			'last_name' => array(
-					'/^[a-zA-Zа-яА-Я]{2,30}$/',
-					'/[^\s]/'
+			array(
+				'name' => 'last_name',
+				'pttrns' => array(
+					'/^[a-zA-Zа-яА-Я]{2,30}$/u',
+				)
 			),
-			'answer'	=> array(
-					'/^[a-zA-Zа-яА-Я0-9]{1,50}$/'
+			array(
+				'name' => 'answer',
+				'pttrns' => array(
+					'/^[a-zA-Zа-яА-Я0-9]{2,50}$/u',
+				)
 			),
-			'registration_question_id' => array(
+			array(
+				'name' => 'registration_question_id',
+				'pttrns' => array(
 					'/[^\D]/'
-		));
+				)
+			)
+		);
 
-		foreach ($elements_for_check as $elem => $pttrns) {
-			foreach($pttrns as $pttrn) {
-				$isOK = preg_match($pttrn, $data[$elem]);
+		foreach ($elements_for_check as $index => $elem) {
+			foreach($elem['pttrns'] as $pttrn) {
+				$isOK = preg_match($pttrn, $data[$elem['name']]);
 				if (!$isOK) {
 					return array(
-						'result' => $isOK,
-						'msg'	=> "Содержимое $elem не соответсвует требованиям."
+						'result' => false,
+						'msg'	=> "Содержимое ".$elem['name']." не соответсвует требованиям."
 					);
 				}
 			}
 		}
 		return array(
-			'result' => $isOK,
+			'result' => true,
 			'msg'	=> ""
 		);
 	}
@@ -224,6 +269,10 @@ class User {
 
 /*
 * Таблица user_answers
+*
+* Доступные извне методы:
+* - Create()	: return array('result' => bool, 'msg' => string)
+* - Set()		: return ничего		
 */
 class UserAnswer {
 
@@ -275,10 +324,10 @@ class UserAnswer {
      
         return array(
 				'result'	=> true,
-				'msg'		=> "");
+				'msg'		=> "успех");
 	}
 	
-	function TableName() {
+	private function TableName() {
 		return "user_answers";
 	}
 
@@ -286,6 +335,9 @@ class UserAnswer {
 
 /*
 * Таблица registration_questions
+*
+* Доступные извне методы:
+* - FindById(string|integer) : return array(question)
 */
 class Question {
 
@@ -306,11 +358,11 @@ class Question {
 		}
 	}
 
-	function TableName() {
+	private function TableName() {
 		return "registration_questions";
 	}
 
-	function Set($data) {
+	private function Set($data) {
 		foreach($this->question as $key => $nothing) {
 			$this->question[$key] = $data[$key];
 		}

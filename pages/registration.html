@@ -1,12 +1,12 @@
-<script src="/static/js/jquery-3.1.1.min.js"></script>
 <script src="/static/js/accept_terms.js"></script>
+<script src="/static/js/sha1.min.js"></script>
 <script src="/static/js/jq.js"></script>
 <link	rel="stylesheet" href="/static/css/tooltip.css">
 <div class="div_registration">
 	<div class="div_registration_header">
 		<span class="span_registration_header" style="font-family: SanFrancisco;">Новый пользователь</span>
 	</div>
-	<form id="form_registration">
+	<form id="form_post">
 		<div class="div_registration_group">
 			<div class="tooltip">
 				<span class="tooltiptext span_tooltip_text">
@@ -78,7 +78,8 @@
 						- длина от 2 до 50 знаков<br>
 						- только латиница, кириллица, цифры
 				</span>
-			<input group="include" class="input_registration" type="text" name="answer" placeholder="ответ*">
+				<input group="include" class="input_registration" type="text" name="answer" placeholder="ответ*">
+			</div>
 		</div>
 		<div class="div_registration_group" style="text-align: left;">
 			<input type="checkbox" name="accept_terms">
@@ -87,6 +88,6 @@
 	</form>
 	<div class="div_registration_group" id="div_registration_info">
 	</div>
-	<button id="input_registration" class="input_submit_registration">Зарегистрироваться!</button>
+	<button value='/user/create' id="input_post" class="input_submit_registration">Зарегистрироваться!</button>
 	<a class="a_registration_navi" href="/signin">Войти</a>
 </div>

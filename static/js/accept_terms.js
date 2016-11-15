@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	accept	= $("input[name=accept_terms]");
-	bttn 	= $("button[id=input_registration]");
+	bttn 	= $("button[id=input_post]");
 
 	if (accept.prop("checked")) {
 		accept.prop("checked", false);

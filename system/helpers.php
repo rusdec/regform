@@ -1,7 +1,10 @@
 <?php
 
 function isAuthorized() {
-	if (isset($_SESSION)) {
+	if (!session_status()) {
+		session_start();
+	}
+	if (isset($_SESSION['auth'])) {
 		return true;
 	}
 	

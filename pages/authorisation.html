@@ -1,15 +1,17 @@
-<script src="/static/js/jquery-3.1.1.min.js"></script>
+<script src="/static/js/sha1.min.js"></script>
 <script src="/static/js/jq.js"></script>
 <div class="div_registration">
 	<div class="div_registration_header">
 		<span class="span_registration_header" style="font-family: SanFrancisco;">Авторизация</span>
 	</div>
-	<form>
+	<form id="form_post">
 		<div class="div_registration_group">
-			<input class="input_registration" type="text" name="user_email" placeholder="эл.почта/логин">
-			<input class="input_registration" type="text" name="user_password" placeholder="пароль">
+			<input group="include" class="input_registration" type="text" name="login"		placeholder="логин">
+			<input group="include" class="input_registration" type="text" name="password"	placeholder="пароль">
 		</div>
-		<input id="input_authorisation" class="input_submit_registration" type="submit" value="Войти" action="#">
-		<a class="a_registration_navi" href="/registration">Регистрация</a>
 	</form>
+	<div class="div_registration_group" id="div_registration_info">
+	</div>
+	<button value="/authorisation" id="input_post" class="input_submit_registration_enabled">Войти</button>
+	<a class="a_registration_navi" href="/registration">Регистрация</a>
 </div>

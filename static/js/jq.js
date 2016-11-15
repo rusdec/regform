@@ -3,55 +3,31 @@ $(document).ready(function() {
 
 function check_reg_form(isOk) {
 	var elements_for_check = {
-		email:		{
-			name:	"email",
-			pttrn:	[
-				'^[a-z0-9][a-z0-9_-]+@[a-z0-9]+\.[a-z]{2,7}$'
+		"email" : [
+				'^[a-zA-Z0-9-]{2,}@[a-zA-Z0-9]{2,}\.[a-zA-Z]{2,7}$'
 			],
-		},
-		password: 	{
-			name:	"password",
-			pttrn:	[
+		"password": [
 				'[a-z]',
 				'[A-Z]',
 				'[0-9]',
 				'[_]',
 				'.{8,15}'
 			],
-		},
-		login:		{
-			name: 	"login",
-			pttrn:	[
+		"login" : [
 				"^[a-zA-Z0-9]{7,14}$",
-				"[^\s]"
 			],
-		},
-		first_name: {
-			name:	"first_name",
-			pttrn:	[
+		"first_name": [
 				"^[a-zA-Zа-яА-Я]{2,30}$",
-				"[^\s]"
 			],
-		},
-		last_name:	{
-			name:	"last_name",
-			pttrn:	[
+		"last_name" : [
 				"^[a-zA-Zа-яА-Я]{2,30}$",
-				"[^\s]"
 			],
-		},
-		answer:		{
-			name:	"answer",
-			pttrn:	[
+		"answer" : [
 				"^[a-zA-Zа-яА-Я0-9]{2,50}$"
 			],
-		},
-		password_c:	{
-			name:	"password_confirm",
-			pttrn:	[
+		"password_confirm" :  [
 				".{8,15}"
 			]
-		}
 	}
 
 	function mark_input(elem) {
@@ -61,62 +37,71 @@ function check_reg_form(isOk) {
 			elem.css("border-left", "1px solid #d0d0d0");
 	}
 
-	function check_elem(elem_array) {
-		var elem = $("input[name='"+elem_array['name']+"']");
+
+	$("input").each(function() {
+		elem = $(this);
+		n = elem.attr('name');
 		unmark_input(elem);
-		$.each(elem_array['pttrn'], function(i,pattern) {
-			//Проверка поля подтверждения пароля
-			if (elem.attr('name') == 'password_confirm') {
-				psswd = $("input[name='password']");
-				if (elem.val() != psswd.val()) {
+		if (typeof elements_for_check[n] != 'undefined') {
+			value = elem.val();
+			$.each(elements_for_check[n], function(i,pattern) {
+				//Исключение: Проверка поля подтверждения пароля
+				if (n == 'password_confirm') {
+					psswd = $("input[name='password']");
+						if (value != psswd.val()) {
+							mark_input(elem);
+							isOK = false
+							return
+						}		
+				}
+				//Проверка значения элемента согласно регулярному выражению
+				var re = new RegExp(pattern)
+				if (value.match(re) == null) {
 					mark_input(elem);
 					isOK = false
 					return
-				}		
-			}
-			//Проверка значения элемента согласно регулярному выражению
-			var re = new RegExp(pattern)
-			if (elem.val().match(re) == null) {
-				mark_input(elem);
-				isOK = false
-				return
-			}
-		});
-	}		
-	
-	$.each(elements_for_check, function(el, data) {
-		check_elem(elements_for_check[el]);
+				}
+			});
+		}
 	});
-	
 }
 
 var isOK
-$("#input_registration").click(function() {
-	var sec	= 5
+var sendButton = $("#input_post");
+sendButton.click(function() {
 	isOK = true;
 	var response_msg;
 
 	check_reg_form(isOK);
 	if (isOK) {
-		var Data = $("#form_registration :input[group=include]").serializeArray();
+		var Data = $("#form_post :input[group=include]").serializeArray();
+		//SHA1-хеширование значения поля password
+		$.each(Data, function(nothing, elem) {
+			if (elem.name == 'password') {
+				elem.value = sha1(elem.value);
+			}
+		});
 		$.ajax({
 			type:	"POST",
-			url:	"/user/create",
+			url:	sendButton.val(),
 			async:	"false",
 			data:	Data,
 		})
 		.done(function(response_msg) {
 			var color = "#6699ff";
 			data = JSON.parse(JSON.stringify(response_msg))
-			if (!data.result) {
-				color = "#ff9999";
+			if (data.redirect != undefined) {
+				window.location.replace(data.redirect);
 			}
-			elem = $("#div_registration_info");
-			elem.empty();
-			elem.append('<span class="span_registration_info" style="color:'+color+';">'+data.msg+'</span>');
+			if (data.msg != undefined && data.msg != "") {
+				if (!data.result) {
+					color = "#ff9999";
+				}
+				elem = $("#div_registration_info");
+				elem.empty();
+				elem.append('<span class="span_registration_info" style="color:'+color+';">'+data.msg+'</span>');
+			}
 		});
-	} else {
-		alert ("Заполни формы");
 	}
     console.log(Data)
 });

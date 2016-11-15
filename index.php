@@ -16,7 +16,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
 function handler($req_uri, $data) {
     switch ($req_uri) {
 		case '/':
-			my_page();
+			user();
 		break;
 
         case '/registration':
@@ -25,6 +25,10 @@ function handler($req_uri, $data) {
 
         case '/signin':
             signin();
+        break;
+
+        case '/signout':
+            signout();
         break;
 
 		case '/authorisation':
