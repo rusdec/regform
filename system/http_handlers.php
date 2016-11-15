@@ -33,6 +33,12 @@ function create_user($data) {
 	//Написать метод проверки значений массива data в классе!!
 	// user->Check($data) : true|false
 	$user = new User;
+	$isOk = $user->CheckData($data);
+	if (!$isOk['result']) {
+		header('Content-Type: application/json;charset=utf-8');
+		echo json_encode($result);
+		return;
+	}
 	$user->SetUserForm($data);
 	$result = $user->Create();
 	header('Content-Type: application/json;charset=utf-8');

@@ -50,6 +50,10 @@ class User {
 		}
 	}
 
+	function TableName() {
+		return "users";
+	}
+
 	function SetUserForm($data) {
 		foreach($this->user_form as $key => $nothing) {
 			if ($data[$key] == "") {
@@ -133,6 +137,7 @@ class User {
 
 		$query = $this->db->prepare("INSERT INTO " . $this->TableName()  . " (".$columns.") VALUES (".$pttrns.")");
 		$this->SetUser($this->user_form);
+		$this->user['password'] = sha1($this->user['password']);
 		$isOk = $query->execute($this->user);
 		if (!$isOk) {
            	return array(
@@ -161,17 +166,60 @@ class User {
 			'msg'		=> "Пользователь зарегистрирован. Нажмите \"Войти\""
 		);
 	}
-
+	
 	/*
-	* return user['?']
+	* return array(bool, string)
 	*/
-	function GetElement($data) {
-		return $this->user[$data];
+	function CheckData($data) {
+		$isOK = true;
+		$elements_for_check = array(
+			'email' => array(
+					'/^[a-z0-9][a-z0-9_-]+@[a-z0-9]+\.[a-z]{2,7}$/'
+			),
+			'password'=> array(
+					'/[a-z]/',
+					'/[A-Z]/',
+					'/[0-9]/',
+					'/[_]/',
+					'/[^\W]/',
+					'/.{8,15}/'
+			),
+			'login'	=> array(
+					'/^[a-zA-Z0-9]{7,14}$/',
+					'/[^\s]/'
+			),
+			'first_name' => array(
+					'/^[a-zA-Zа-яА-Я]{2,30}$/',
+					'/[^\s]/'
+			),
+			'last_name' => array(
+					'/^[a-zA-Zа-яА-Я]{2,30}$/',
+					'/[^\s]/'
+			),
+			'answer'	=> array(
+					'/^[a-zA-Zа-яА-Я0-9]{1,50}$/'
+			),
+			'registration_question_id' => array(
+					'/[^\D]/'
+		));
+
+		foreach ($elements_for_check as $elem => $pttrns) {
+			foreach($pttrns as $pttrn) {
+				$isOK = preg_match($pttrn, $data[$elem]);
+				if (!$isOK) {
+					return array(
+						'result' => $isOK,
+						'msg'	=> "Содержимое $elem не соответсвует требованиям."
+					);
+				}
+			}
+		}
+		return array(
+			'result' => $isOK,
+			'msg'	=> ""
+		);
 	}
 
-	function TableName() {
-		return "users";
-	}
 }
 
 /*
@@ -283,11 +331,4 @@ class Question {
 		return $result;
 	}
 	
-	/*
-	* return question['?']
-	*/
-	function GetElement($data) {
-		return $this->question[$data];
-	}
-
 }

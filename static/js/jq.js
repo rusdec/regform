@@ -97,7 +97,6 @@ $("#input_registration").click(function() {
 	var response_msg;
 
 	check_reg_form(isOK);
-	alert(isOK);
 	if (isOK) {
 		var Data = $("#form_registration :input[group=include]").serializeArray();
 		$.ajax({
